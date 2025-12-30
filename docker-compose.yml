@@ -1,0 +1,41 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gamesPage-app
+    volumes:
+      - ./src:/var/www/html
+    networks:
+      - gamesPage
+
+  web:
+    image: nginx:1-alpine
+    container_name: gamesPage-web
+    ports:
+      - "8000:80"
+    volumes:
+      - ./src:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - gamesPage
+
+  db:
+    image: mysql:8.0
+    container_name: gamesPage-db
+    environment:
+      MYSQL_DATABASE: gamesPage
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./db:/var/lib/mysql
+    networks:
+      - gamesPage
+    ports:
+      - "3306:3306"
+
+networks:
+  gamesPage:
+    driver: bridge
+
