@@ -33,6 +33,9 @@ new class extends Component
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('checkers')" :active="request()->routeIs('checkers')">
+                        {{ __('Checkers') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -41,17 +44,25 @@ new class extends Component
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
+                        @auth()    
+                        <div x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
 
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                                 </svg>
                             </div>
+                        @endauth
+                        @guest 
+                            <div>
+                                Hello Guest
+                            </div>
+                        @endguest
                         </button>
                     </x-slot>
 
                     <x-slot name="content">
+                        @auth()
                         <x-dropdown-link :href="route('profile')" wire:navigate>
                             {{ __('Profile') }}
                         </x-dropdown-link>
@@ -62,6 +73,12 @@ new class extends Component
                                 {{ __('Log Out') }}
                             </x-dropdown-link>
                         </button>
+                        @endauth
+                        @guest 
+                            <x-dropdown-link :href="route('register')">
+                                Try register
+                            </x-dropdown-link>
+                        @endguest
                     </x-slot>
                 </x-dropdown>
             </div>
@@ -84,16 +101,25 @@ new class extends Component
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('checkers')" :active="request()->routeIs('checkers')" wire:navigate>
+                {{ __('Checkers') }}
+            </x-responsive-nav-link>
         </div>
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="px-4">
+                @auth()
                 <div class="font-medium text-base text-gray-800" x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
                 <div class="font-medium text-sm text-gray-500">{{ auth()->user()->email }}</div>
+                @endauth
+                @guest
+                    <div class="font-medium text-base text-gray-800">Guest</div>
+                @endguest
             </div>
 
             <div class="mt-3 space-y-1">
+                @auth()
                 <x-responsive-nav-link :href="route('profile')" wire:navigate>
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
@@ -104,6 +130,12 @@ new class extends Component
                         {{ __('Log Out') }}
                     </x-responsive-nav-link>
                 </button>
+                @endauth
+                @guest
+                    <x-responsive-nav-link :href="route('register')">
+                        Try register
+                    </x-responsive-nav-link>
+                @endguest
             </div>
         </div>
     </div>
